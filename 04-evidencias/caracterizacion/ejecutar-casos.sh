@@ -16,6 +16,11 @@ EJEC="$APP/bin/Release/net8.0"
 
 for entrada in "$ENTRADAS"/*.in; do
     caso="$(basename "$entrada" .in)"
+    # El caso 12 ejercita la opcion 8, que solo existe en el rediseniado.
+    if [ "$caso" = "caso-12-recorrido-demostracion" ] &&
+       [ "$DESTINO" = "original" ]; then
+        continue
+    fi
     # Cada caso arranca con una copia limpia de los .txt: el estado en memoria
     # no se persiste, pero asi se garantiza aislamiento total entre casos.
     cp "$APP"/*.txt "$EJEC"/

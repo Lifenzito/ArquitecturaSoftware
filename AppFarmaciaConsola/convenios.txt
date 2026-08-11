@@ -1,0 +1,5 @@
+Empresa;10
+Banco;8
+Cooperativa;12
+Mutual;7
+Universidad;15

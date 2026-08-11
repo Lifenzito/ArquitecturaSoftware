@@ -19,9 +19,16 @@ contra el código **rediseñado**, y las salidas se comparan con `diff`.
 
 Requiere .NET SDK 8.
 
+El script compila y ejecuta **el código que esté en la copia de trabajo**, así
+que la salida `original` solo se regenera estando en la rama
+`caracterizacion-original`:
+
 ```bash
 # todos los casos
+git checkout caracterizacion-original
 ./04-evidencias/caracterizacion/ejecutar-casos.sh original      # sobre el AS-IS
+
+git checkout fase4-implementacion
 ./04-evidencias/caracterizacion/ejecutar-casos.sh rediseniado   # sobre el TO-BE
 
 # un caso suelto, manualmente
@@ -60,6 +67,7 @@ done
 | 9 | `caso-09-acumular-puntos.in` | `2`, `5`, `Carlos`, `100`, `2`, `7` | Acumulación de puntos con listado de clientes antes y después, y el evento de puntos. |
 | 10 | `caso-10-ver-alertas.in` | `6`, `7` | Alertas disparadas desde la opción 6 del menú. |
 | 11 | `caso-11-salir.in` | `7` | Salida limpia: `Saliendo del sistema...` y `FIN DEL SISTEMA`. |
+| 12 | `caso-12-recorrido-demostracion.in` | `8`, `7` | Recorrido de demostración del sistema rediseñado (opción 8). **No tiene contraparte en el original**: allí la opción 8 cae en `Opción inválida`. No entra en la comparación. |
 
 ## Notas sobre determinismo
 

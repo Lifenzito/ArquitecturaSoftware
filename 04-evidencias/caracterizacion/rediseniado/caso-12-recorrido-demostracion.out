@@ -1,0 +1,87 @@
+Cargando información del sistema...
+
+Productos cargados
+Clientes cargados
+Usuarios cargados
+
+=========== LOGIN ===========
+Usuario: Contraseña: 
+Login correcto
+ALERTA: stock mínimo de Dolex
+ALERTA: stock mínimo de Amoxicilina
+ALERTA: stock mínimo de Loratadina
+ALERTA: stock mínimo de Diclofenaco
+ALERTA: Dolex próximo a vencer
+ALERTA: Ibuprofeno próximo a vencer
+ALERTA: Amoxicilina próximo a vencer
+ALERTA: Acetaminofen próximo a vencer
+ALERTA: Omeprazol próximo a vencer
+ALERTA: Loratadina próximo a vencer
+ALERTA: VitaminaC próximo a vencer
+ALERTA: Diclofenaco próximo a vencer
+ALERTA: Aspirina próximo a vencer
+ALERTA: Naproxeno próximo a vencer
+
+==============================
+      SISTEMA FARMACIA
+==============================
+1. Ver productos
+2. Ver clientes
+3. Buscar producto
+4. Registrar venta
+5. Acumular puntos
+6. Ver alertas
+7. Salir
+
+Seleccione opción: 
+===== DEMOSTRACIÓN =====
+
+--- Catálogo por tipo ---
+MedicamentoCapsula	Dolex	5000	Proveedor: MK
+MedicamentoCapsula	Ibuprofeno	7000	Proveedor: Genfar
+MedicamentoCapsula	Amoxicilina	12000	Proveedor: Bayer
+MedicamentoCapsula	Acetaminofen	4500	Proveedor: MK
+MedicamentoCapsula	Omeprazol	15000	Proveedor: LaSante
+MedicamentoCapsula	Loratadina	9000	Proveedor: Genfar
+MedicamentoCapsula	VitaminaC	6000	Proveedor: Nature
+MedicamentoCapsula	Diclofenaco	11000	Proveedor: Bayer
+MedicamentoCapsula	Aspirina	7500	Proveedor: MK
+MedicamentoCapsula	Naproxeno	13500	Proveedor: Genfar
+Cosmetico	Shampoo	18000	Proveedor: Nivea
+Cosmetico	JabonCorporal	9500	Proveedor: Protex
+Cosmetico	CremaFacial	32000	Proveedor: Pond
+Comestible	GaseosaCola	4000	Proveedor: PostoBon
+Comestible	AguaBotella	2500	Proveedor: Cristal
+Comestible	HeladoVainilla	6500	Proveedor: Colombina
+Inyectologia	Inyectologia	15000	Duración: 10 min
+CuracionBasica	CuracionBasica	25000	Duración: 20 min
+CambioVendaje	CambioVendaje	18000	Duración: 15 min
+
+--- Venta de producto con stock ---
+Stock antes: 2
+Movimiento registrado: Venta
+Stock después: 1
+
+--- Venta de procedimiento ---
+Movimiento registrado: Venta
+Inyectologia no implementa IProductoConStock: no hay stock que descontar
+
+--- Descuento por convenio ---
+Cliente: Carlos - Convenio: UPB (Universidad)
+Precio: 15000 - Descuento: 2250 - Total: 12750
+
+==============================
+      SISTEMA FARMACIA
+==============================
+1. Ver productos
+2. Ver clientes
+3. Buscar producto
+4. Registrar venta
+5. Acumular puntos
+6. Ver alertas
+7. Salir
+
+Seleccione opción: 
+Saliendo del sistema...
+
+FIN DEL SISTEMA
