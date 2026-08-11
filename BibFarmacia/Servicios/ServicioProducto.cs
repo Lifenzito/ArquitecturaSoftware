@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BibFarmacia.Clases;
-using BibFarmacia.Eventos;
 using BibFarmacia.Interfaces;
 
 namespace BibFarmacia.Servicios
@@ -13,17 +12,17 @@ namespace BibFarmacia.Servicios
     public class ServicioProducto
     {
         private readonly IRepositoryProducto repositoryProducto;
-
-        public EventoStockMinimo EventoStock;
-        public EventoVencimiento EventoVencimiento;
+        private readonly List<IVerificador> verificadores;
+        private readonly List<IEvento> eventos;
 
         public ServicioProducto(
-            IRepositoryProducto repositoryProducto)
+            IRepositoryProducto repositoryProducto,
+            List<IVerificador> verificadores,
+            List<IEvento> eventos)
         {
             this.repositoryProducto = repositoryProducto;
-
-            EventoStock = new EventoStockMinimo();
-            EventoVencimiento = new EventoVencimiento();
+            this.verificadores = verificadores;
+            this.eventos = eventos;
         }
 
         public string AgregarProducto(
@@ -46,36 +45,19 @@ namespace BibFarmacia.Servicios
                 .CargarDesdeArchivo(ruta);
         }
 
-        public void VerificarStock()
+        public List<IEvento> ObtenerEventos()
         {
-            foreach (var producto in
-                ObtenerProductos()
-                .OfType<IProductoConStock>())
-            {
-                if (producto.Stock <=
-                    producto.StockMinimo)
-                {
-                    EventoStock.Disparar(
-                        (Producto)producto);
-                }
-            }
+            return eventos;
         }
 
-        public void VerificarVencimiento()
+        public void Verificar()
         {
-            foreach (var producto in
-                ObtenerProductos()
-                .OfType<IVencimiento>())
+            foreach (var verificador in verificadores)
             {
-                int dias =
-                    (producto.FechaVencimiento -
-                    DateTime.Now).Days;
-
-                if (dias <= 30)
+                foreach (var producto in
+                    ObtenerProductos())
                 {
-                    EventoVencimiento
-                        .Disparar(
-                            (Producto)producto);
+                    verificador.Verificar(producto);
                 }
             }
         }

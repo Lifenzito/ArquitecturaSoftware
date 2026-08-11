@@ -1,14 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using BibFarmacia.Clases;
+using BibFarmacia.Interfaces;
 
 namespace BibFarmacia.Eventos
 {
-    public class EventoVencimiento
+    public class EventoVencimiento : IEvento
     {
         public delegate void DelegadoVencimiento(
             string mensaje);
@@ -21,6 +22,11 @@ namespace BibFarmacia.Eventos
         {
             Vencimiento?.Invoke(
                 $"ALERTA: {producto.Nombre} próximo a vencer");
+        }
+
+        void IEvento.Disparar(object entidad)
+        {
+            Disparar((Producto)entidad);
         }
     }
 }

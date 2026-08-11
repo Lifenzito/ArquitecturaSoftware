@@ -1,8 +1,9 @@
-﻿using BibFarmacia.Aspectos;
-using BibFarmacia.Clases;
+﻿using BibFarmacia.Clases;
+using BibFarmacia.Eventos;
 using BibFarmacia.Interfaces;
 using BibFarmacia.Repositorios;
 using BibFarmacia.Servicios;
+using BibFarmacia.Verificadores;
 
 Console.Title = "Sistema Farmacia";
 
@@ -18,9 +19,19 @@ IRepositoryUsuario repositoryUsuario =
 IMovimientoRepository movimientoRepository =
     new MovimientoRepository();
 
-ServicioProducto servicioProducto =
-    new ServicioProducto(
-        repositoryProducto);
+EventoStockMinimo eventoStock =
+    new EventoStockMinimo();
+
+EventoVencimiento eventoVencimiento =
+    new EventoVencimiento();
+
+List<IVerificador> verificadores =
+    new List<IVerificador>
+    {
+        new VerificadorStock(eventoStock),
+        new VerificadorVencimiento(
+            eventoVencimiento)
+    };
 
 ServicioCliente servicioCliente =
     new ServicioCliente(
@@ -34,9 +45,28 @@ ServicioMovimiento servicioMovimiento =
     new ServicioMovimiento(
         movimientoRepository);
 
+IServicioAutenticacion servicioAutenticacion =
+    new ServicioAutenticacion(
+        repositoryUsuario);
+
+List<IEvento> eventos =
+    new List<IEvento>
+    {
+        eventoStock,
+        eventoVencimiento,
+        servicioCliente.EventoPuntos,
+        servicioMovimiento.EventoMovimiento
+    };
+
+ServicioProducto servicioProducto =
+    new ServicioProducto(
+        repositoryProducto,
+        verificadores,
+        eventos);
+
 // ================= EVENTOS =================
 
-servicioProducto.EventoStock.StockMinimo +=
+eventoStock.StockMinimo +=
     mensaje =>
     {
         Console.ForegroundColor =
@@ -47,7 +77,7 @@ servicioProducto.EventoStock.StockMinimo +=
         Console.ResetColor();
     };
 
-servicioProducto.EventoVencimiento.Vencimiento +=
+eventoVencimiento.Vencimiento +=
     mensaje =>
     {
         Console.ForegroundColor =
@@ -124,8 +154,7 @@ string password =
     Console.ReadLine()!;
 
 bool login =
-    AspectoAutenticacion.Login(
-        repositoryUsuario.ObtenerUsuarios(),
+    servicioAutenticacion.Login(
         user,
         password);
 
@@ -152,9 +181,7 @@ Console.ResetColor();
 
 // ================= ALERTAS =================
 
-servicioProducto.VerificarStock();
-
-servicioProducto.VerificarVencimiento();
+servicioProducto.Verificar();
 
 // ================= MENÚ =================
 
@@ -368,10 +395,7 @@ while (opcion != 7)
                 "\nVerificando alertas...");
 
             servicioProducto
-                .VerificarStock();
-
-            servicioProducto
-                .VerificarVencimiento();
+                .Verificar();
 
             break;
 

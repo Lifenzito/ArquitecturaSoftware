@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using BibFarmacia.Interfaces;
+
 namespace BibFarmacia.Eventos
 {
-    public class EventoMovimiento
+    public class EventoMovimiento : IEvento
     {
         public delegate void DelegadoMovimiento(
             string mensaje);
@@ -19,6 +21,11 @@ namespace BibFarmacia.Eventos
         {
             MovimientoRegistrado?.Invoke(
                 $"Movimiento registrado: {tipo}");
+        }
+
+        void IEvento.Disparar(object entidad)
+        {
+            Disparar((string)entidad);
         }
     }
 }
