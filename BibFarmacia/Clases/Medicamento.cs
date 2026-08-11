@@ -1,14 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using BibFarmacia.Interfaces;
+
 namespace BibFarmacia.Clases
 {
-    public class Medicamento : Producto
+    public class Medicamento : Producto,
+        IProductoConStock,
+        IVencimiento
     {
-        public Laboratorio Laboratorio { get; set; }
+        public int Stock { get; set; }
+        public int StockMinimo { get; set; }
+        public DateTime FechaVencimiento { get; set; }
 
         public Medicamento(string nombre,
             decimal precio,
@@ -16,10 +22,18 @@ namespace BibFarmacia.Clases
             int stockMinimo,
             DateTime fechaVencimiento,
             Laboratorio laboratorio)
-            : base(nombre, precio, stock,
-                  stockMinimo, fechaVencimiento)
+            : base(nombre, precio, laboratorio)
         {
-            Laboratorio = laboratorio;
+            Stock = stock;
+            StockMinimo = stockMinimo;
+            FechaVencimiento = fechaVencimiento;
+        }
+
+        public override void MostrarInformacion()
+        {
+            base.MostrarInformacion();
+
+            Console.WriteLine($"Stock: {Stock}");
         }
     }
 }

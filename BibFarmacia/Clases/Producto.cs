@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,28 +9,21 @@ namespace BibFarmacia.Clases
     {
         public string Nombre { get; set; }
         public decimal Precio { get; set; }
-        public int Stock { get; set; }
-        public int StockMinimo { get; set; }
-        public DateTime FechaVencimiento { get; set; }
+        public Proveedor Proveedor { get; set; }
 
         protected Producto(string nombre,
             decimal precio,
-            int stock,
-            int stockMinimo,
-            DateTime fechaVencimiento)
+            Proveedor proveedor)
         {
             Nombre = nombre;
             Precio = precio;
-            Stock = stock;
-            StockMinimo = stockMinimo;
-            FechaVencimiento = fechaVencimiento;
+            Proveedor = proveedor;
         }
 
         public virtual void MostrarInformacion()
         {
             Console.WriteLine($"Producto: {Nombre}");
             Console.WriteLine($"Precio: {Precio}");
-            Console.WriteLine($"Stock: {Stock}");
         }
     }
 }

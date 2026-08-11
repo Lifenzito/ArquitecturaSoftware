@@ -1,6 +1,5 @@
-﻿using BibFarmacia.Aspectos;
-using BibFarmacia.Clases;
-using BibFarmacia.Factories;
+﻿using BibFarmacia.Clases;
+using BibFarmacia.Interfaces;
 using BibFarmacia.Servicios;
 
 Console.Title = "Sistema Farmacia";
@@ -189,7 +188,7 @@ while (opcion != 7)
             {
                 Console.WriteLine(
                     $"{producto.Nombre}\t\t" +
-                    $"{producto.Stock}\t" +
+                    $"{(producto as IProductoConStock)?.Stock}\t" +
                     $"{producto.Precio}");
             }
 
@@ -242,7 +241,7 @@ while (opcion != 7)
 
                 Console.WriteLine(
                     $"Stock: " +
-                    $"{productoBuscado.Stock}");
+                    $"{(productoBuscado as IProductoConStock)?.Stock}");
             }
             else
             {
@@ -277,8 +276,12 @@ while (opcion != 7)
                     int.Parse(
                         Console.ReadLine()!);
 
-                productoVenta.Stock -=
-                    cantidad;
+                if (productoVenta is
+                    IProductoConStock productoConStock)
+                {
+                    productoConStock.Stock -=
+                        cantidad;
+                }
 
                 Movimiento venta =
                     new Movimiento(

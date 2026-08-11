@@ -46,19 +46,22 @@ namespace BibFarmacia.Servicios
 
         public void VerificarStock()
         {
-            foreach (var producto in productos)
+            foreach (var producto in
+                productos.OfType<IProductoConStock>())
             {
                 if (producto.Stock <=
                     producto.StockMinimo)
                 {
-                    EventoStock.Disparar(producto);
+                    EventoStock.Disparar(
+                        (Producto)producto);
                 }
             }
         }
 
         public void VerificarVencimiento()
         {
-            foreach (var producto in productos)
+            foreach (var producto in
+                productos.OfType<IVencimiento>())
             {
                 int dias =
                     (producto.FechaVencimiento -
@@ -67,7 +70,8 @@ namespace BibFarmacia.Servicios
                 if (dias <= 30)
                 {
                     EventoVencimiento
-                        .Disparar(producto);
+                        .Disparar(
+                            (Producto)producto);
                 }
             }
         }
