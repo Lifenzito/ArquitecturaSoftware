@@ -1,20 +1,38 @@
-﻿using BibFarmacia.Clases;
+﻿using BibFarmacia.Aspectos;
+using BibFarmacia.Clases;
 using BibFarmacia.Interfaces;
+using BibFarmacia.Repositorios;
 using BibFarmacia.Servicios;
 
 Console.Title = "Sistema Farmacia";
 
+IRepositoryProducto repositoryProducto =
+    new RepositoryProducto();
+
+IClienteRepository clienteRepository =
+    new ClienteRepository();
+
+IRepositoryUsuario repositoryUsuario =
+    new RepositoryUsuario();
+
+IMovimientoRepository movimientoRepository =
+    new MovimientoRepository();
+
 ServicioProducto servicioProducto =
-    new ServicioProducto();
+    new ServicioProducto(
+        repositoryProducto);
 
 ServicioCliente servicioCliente =
-    new ServicioCliente();
+    new ServicioCliente(
+        clienteRepository);
 
 ServicioUsuario servicioUsuario =
-    new ServicioUsuario();
+    new ServicioUsuario(
+        repositoryUsuario);
 
 ServicioMovimiento servicioMovimiento =
-    new ServicioMovimiento();
+    new ServicioMovimiento(
+        movimientoRepository);
 
 // ================= EVENTOS =================
 
@@ -106,7 +124,8 @@ string password =
     Console.ReadLine()!;
 
 bool login =
-    servicioUsuario.Login(
+    AspectoAutenticacion.Login(
+        repositoryUsuario.ObtenerUsuarios(),
         user,
         password);
 

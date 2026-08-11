@@ -1,24 +1,26 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using BibFarmacia.Clases;
-using BibFarmacia.Interfaces;
 using BibFarmacia.Eventos;
+using BibFarmacia.Interfaces;
 
 namespace BibFarmacia.Servicios
 {
     public class ServicioProducto
     {
-        private readonly List<Producto> productos;
+        private readonly IRepositoryProducto repositoryProducto;
 
         public EventoStockMinimo EventoStock;
         public EventoVencimiento EventoVencimiento;
 
-        public ServicioProducto()
+        public ServicioProducto(
+            IRepositoryProducto repositoryProducto)
         {
-            productos = new List<Producto>();
+            this.repositoryProducto = repositoryProducto;
 
             EventoStock = new EventoStockMinimo();
             EventoVencimiento = new EventoVencimiento();
@@ -27,27 +29,28 @@ namespace BibFarmacia.Servicios
         public string AgregarProducto(
             Producto producto)
         {
-            try
-            {
-                productos.Add(producto);
-
-                return "Producto agregado";
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
+            return repositoryProducto
+                .AgregarProducto(producto);
         }
 
         public List<Producto> ObtenerProductos()
         {
-            return productos;
+            return repositoryProducto
+                .ObtenerProductos();
+        }
+
+        public string CargarDesdeArchivo(
+            string ruta)
+        {
+            return repositoryProducto
+                .CargarDesdeArchivo(ruta);
         }
 
         public void VerificarStock()
         {
             foreach (var producto in
-                productos.OfType<IProductoConStock>())
+                ObtenerProductos()
+                .OfType<IProductoConStock>())
             {
                 if (producto.Stock <=
                     producto.StockMinimo)
@@ -61,7 +64,8 @@ namespace BibFarmacia.Servicios
         public void VerificarVencimiento()
         {
             foreach (var producto in
-                productos.OfType<IVencimiento>())
+                ObtenerProductos()
+                .OfType<IVencimiento>())
             {
                 int dias =
                     (producto.FechaVencimiento -
@@ -73,51 +77,6 @@ namespace BibFarmacia.Servicios
                         .Disparar(
                             (Producto)producto);
                 }
-            }
-        }
-
-        public string CargarDesdeArchivo(
-            string ruta)
-        {
-            try
-            {
-                if (!File.Exists(ruta))
-                {
-                    return "Archivo no encontrado";
-                }
-
-                string[] lineas =
-                    File.ReadAllLines(ruta);
-
-                foreach (string linea in lineas)
-                {
-                    string[] datos =
-                        linea.Split(';');
-
-                    Laboratorio laboratorio =
-                        new Laboratorio(
-                            datos[5],
-                            "Medellin",
-                            "4444444");
-
-                    MedicamentoCapsula medicamento =
-                        new MedicamentoCapsula(
-                            datos[0],
-                            decimal.Parse(datos[1]),
-                            int.Parse(datos[2]),
-                            int.Parse(datos[3]),
-                            DateTime.Parse(datos[4]),
-                            laboratorio,
-                            Enum.TipoRelleno.Gel);
-
-                    productos.Add(medicamento);
-                }
-
-                return "Productos cargados";
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
             }
         }
     }
