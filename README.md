@@ -5,6 +5,25 @@ clases objetivo (TO-BE) de la Fase 3, **sin cambiar el comportamiento
 observable**: las mismas entradas producen exactamente las mismas salidas, con
 el mismo texto, el mismo orden y los mismos colores de consola.
 
+**Video de sustentación:** https://youtu.be/x6L9rv9Buko
+
+## Equipo y roles
+
+| Rol | Integrante |
+|---|---|
+| Arquitecto de dominio | Juan Jerónimo Tabares Cataño |
+| Arquitecto de dependencias | Andrés Arroyave Cardona |
+| Ingeniero de comportamiento | Santiago López Ángel |
+| Integrador y evidencia | Lifeng Chen |
+
+## Convención de colores del diagrama TO-BE
+
+| Color | Significado |
+|---|---|
+| Verde | Clases nuevas |
+| Azul | Clases modificadas |
+| Negro | Clases que resuelven violaciones concretas a SOLID |
+
 ## Cómo compilar y ejecutar
 
 Requiere el SDK de .NET 8.
