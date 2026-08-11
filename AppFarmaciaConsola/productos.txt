@@ -8,3 +8,9 @@ VitaminaC;6000;15;5;2026-02-11;Nature
 Diclofenaco;11000;3;5;2025-06-12;Bayer
 Aspirina;7500;9;5;2025-12-30;MK
 Naproxeno;13500;7;5;2025-09-01;Genfar
+Shampoo;18000;12;5;2027-05-20;Nivea;cosmetico
+JabonCorporal;9500;7;5;2027-04-15;Protex;cosmetico
+CremaFacial;32000;6;5;2027-03-10;Pond;cosmetico
+GaseosaCola;4000;24;5;2027-06-30;PostoBon;comestible
+AguaBotella;2500;30;5;2027-01-31;Cristal;comestible
+HeladoVainilla;6500;8;5;2027-02-28;Colombina;comestible

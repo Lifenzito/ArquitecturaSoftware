@@ -1,22 +1,25 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using BibFarmacia.Clases;
 using BibFarmacia.Eventos;
+using BibFarmacia.Interfaces;
 
 namespace BibFarmacia.Servicios
 {
     public class ServicioMovimiento
     {
-        private List<Movimiento> movimientos;
+        private readonly IMovimientoRepository movimientoRepository;
 
         public EventoMovimiento EventoMovimiento;
 
-        public ServicioMovimiento()
+        public ServicioMovimiento(
+            IMovimientoRepository movimientoRepository)
         {
-            movimientos = new List<Movimiento>();
+            this.movimientoRepository = movimientoRepository;
 
             EventoMovimiento =
                 new EventoMovimiento();
@@ -25,7 +28,8 @@ namespace BibFarmacia.Servicios
         public void RegistrarMovimiento(
             Movimiento movimiento)
         {
-            movimientos.Add(movimiento);
+            movimientoRepository
+                .RegistrarMovimiento(movimiento);
 
             EventoMovimiento.Disparar(
                 movimiento.Tipo);
@@ -34,7 +38,8 @@ namespace BibFarmacia.Servicios
         public List<Movimiento>
             ObtenerMovimientos()
         {
-            return movimientos;
+            return movimientoRepository
+                .ObtenerMovimientos();
         }
     }
 }

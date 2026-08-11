@@ -1,25 +1,100 @@
-﻿using BibFarmacia.Aspectos;
-using BibFarmacia.Clases;
+﻿using BibFarmacia.Clases;
+using BibFarmacia.Convenios;
+using BibFarmacia.Enum;
+using BibFarmacia.Eventos;
 using BibFarmacia.Factories;
+using BibFarmacia.Interfaces;
+using BibFarmacia.Repositorios;
 using BibFarmacia.Servicios;
+using BibFarmacia.Verificadores;
 
 Console.Title = "Sistema Farmacia";
 
-ServicioProducto servicioProducto =
-    new ServicioProducto();
+List<IProductoFactory> fabricas =
+    new List<IProductoFactory>
+    {
+        new MedicamentoCapsulaFactory(),
+        new MedicamentoLiquidoFactory(),
+        new CosmeticoFactory(),
+        new ComestibleFactory(),
+        new InyectologiaFactory(),
+        new CuracionBasicaFactory(),
+        new CambioVendajeFactory()
+    };
+
+IRepositoryProducto repositoryProducto =
+    new RepositoryProducto(fabricas);
+
+IClienteRepository clienteRepository =
+    new ClienteRepository();
+
+IRepositoryUsuario repositoryUsuario =
+    new RepositoryUsuario();
+
+IMovimientoRepository movimientoRepository =
+    new MovimientoRepository();
+
+EventoStockMinimo eventoStock =
+    new EventoStockMinimo();
+
+EventoVencimiento eventoVencimiento =
+    new EventoVencimiento();
+
+List<IVerificador> verificadores =
+    new List<IVerificador>
+    {
+        new VerificadorStock(eventoStock),
+        new VerificadorVencimiento(
+            eventoVencimiento)
+    };
 
 ServicioCliente servicioCliente =
-    new ServicioCliente();
+    new ServicioCliente(
+        clienteRepository);
 
 ServicioUsuario servicioUsuario =
-    new ServicioUsuario();
+    new ServicioUsuario(
+        repositoryUsuario);
 
 ServicioMovimiento servicioMovimiento =
-    new ServicioMovimiento();
+    new ServicioMovimiento(
+        movimientoRepository);
+
+IServicioAutenticacion servicioAutenticacion =
+    new ServicioAutenticacion(
+        repositoryUsuario);
+
+List<IEntidadConvenio> convenios =
+    new List<IEntidadConvenio>
+    {
+        new ConvenioEmpresa("Sofka"),
+        new ConvenioBanco("Bancolombia"),
+        new ConvenioCooperativa("Coomeva"),
+        new ConvenioMutual("Mutual Ser"),
+        new ConvenioUniversidad("UPB")
+    };
+
+ServicioDescuento servicioDescuento =
+    new ServicioDescuento(convenios);
+
+List<IEvento> eventos =
+    new List<IEvento>
+    {
+        eventoStock,
+        eventoVencimiento,
+        servicioCliente.EventoPuntos,
+        servicioMovimiento.EventoMovimiento
+    };
+
+ServicioProducto servicioProducto =
+    new ServicioProducto(
+        repositoryProducto,
+        verificadores,
+        eventos);
 
 // ================= EVENTOS =================
 
-servicioProducto.EventoStock.StockMinimo +=
+eventoStock.StockMinimo +=
     mensaje =>
     {
         Console.ForegroundColor =
@@ -30,7 +105,7 @@ servicioProducto.EventoStock.StockMinimo +=
         Console.ResetColor();
     };
 
-servicioProducto.EventoVencimiento.Vencimiento +=
+eventoVencimiento.Vencimiento +=
     mensaje =>
     {
         Console.ForegroundColor =
@@ -107,7 +182,7 @@ string password =
     Console.ReadLine()!;
 
 bool login =
-    servicioUsuario.Login(
+    servicioAutenticacion.Login(
         user,
         password);
 
@@ -134,9 +209,7 @@ Console.ResetColor();
 
 // ================= ALERTAS =================
 
-servicioProducto.VerificarStock();
-
-servicioProducto.VerificarVencimiento();
+servicioProducto.Verificar();
 
 // ================= MENÚ =================
 
@@ -189,7 +262,7 @@ while (opcion != 7)
             {
                 Console.WriteLine(
                     $"{producto.Nombre}\t\t" +
-                    $"{producto.Stock}\t" +
+                    $"{(producto as IProductoConStock)?.Stock}\t" +
                     $"{producto.Precio}");
             }
 
@@ -242,7 +315,7 @@ while (opcion != 7)
 
                 Console.WriteLine(
                     $"Stock: " +
-                    $"{productoBuscado.Stock}");
+                    $"{(productoBuscado as IProductoConStock)?.Stock}");
             }
             else
             {
@@ -277,8 +350,12 @@ while (opcion != 7)
                     int.Parse(
                         Console.ReadLine()!);
 
-                productoVenta.Stock -=
-                    cantidad;
+                if (productoVenta is
+                    IProductoConStock productoConStock)
+                {
+                    productoConStock.Stock -=
+                        cantidad;
+                }
 
                 Movimiento venta =
                     new Movimiento(
@@ -346,10 +423,157 @@ while (opcion != 7)
                 "\nVerificando alertas...");
 
             servicioProducto
-                .VerificarStock();
+                .Verificar();
 
-            servicioProducto
-                .VerificarVencimiento();
+            break;
+
+        case 8:
+
+            // Recorrido de demostracion. No se lista en el menu para no
+            // alterar la salida observable de las opciones originales.
+
+            Console.ForegroundColor =
+                ConsoleColor.Cyan;
+
+            Console.WriteLine(
+                "\n===== DEMOSTRACIÓN =====");
+
+            Console.ResetColor();
+
+            InyectologiaFactory inyectologiaFactory =
+                new InyectologiaFactory();
+
+            CuracionBasicaFactory curacionFactory =
+                new CuracionBasicaFactory();
+
+            CambioVendajeFactory vendajeFactory =
+                new CambioVendajeFactory();
+
+            Marca marcaServicios =
+                new Marca(
+                    "Servicios Farmacia",
+                    "Medellin",
+                    "4444444");
+
+            List<Procedimiento> procedimientos =
+                new List<Procedimiento>
+                {
+                    inyectologiaFactory.Crear(
+                        "Inyectologia",
+                        15000,
+                        marcaServicios,
+                        10),
+                    curacionFactory.Crear(
+                        "CuracionBasica",
+                        25000,
+                        marcaServicios,
+                        20),
+                    vendajeFactory.Crear(
+                        "CambioVendaje",
+                        18000,
+                        marcaServicios,
+                        15)
+                };
+
+            Console.WriteLine(
+                "\n--- Catálogo por tipo ---");
+
+            foreach (var producto in
+                servicioProducto.ObtenerProductos())
+            {
+                Console.WriteLine(
+                    $"{producto.GetType().Name}\t" +
+                    $"{producto.Nombre}\t" +
+                    $"{producto.Precio}\t" +
+                    $"Proveedor: " +
+                    $"{producto.Proveedor.Nombre}");
+            }
+
+            foreach (var procedimiento in
+                procedimientos)
+            {
+                Console.WriteLine(
+                    $"{procedimiento.GetType().Name}\t" +
+                    $"{procedimiento.Nombre}\t" +
+                    $"{procedimiento.Precio}\t" +
+                    $"Duración: " +
+                    $"{procedimiento.DuracionMinutos} min");
+            }
+
+            Console.WriteLine(
+                "\n--- Venta de producto con stock ---");
+
+            var productoDemo =
+                servicioProducto
+                .ObtenerProductos()
+                .OfType<IProductoConStock>()
+                .First();
+
+            Console.WriteLine(
+                $"Stock antes: " +
+                $"{productoDemo.Stock}");
+
+            productoDemo.Stock -= 1;
+
+            servicioMovimiento
+                .RegistrarMovimiento(
+                    new Movimiento(
+                        DateTime.Now,
+                        1,
+                        "Venta",
+                        (Producto)productoDemo));
+
+            Console.WriteLine(
+                $"Stock después: " +
+                $"{productoDemo.Stock}");
+
+            Console.WriteLine(
+                "\n--- Venta de procedimiento ---");
+
+            Procedimiento procedimientoDemo =
+                procedimientos[0];
+
+            servicioMovimiento
+                .RegistrarMovimiento(
+                    new Movimiento(
+                        DateTime.Now,
+                        1,
+                        "Venta",
+                        procedimientoDemo));
+
+            Console.WriteLine(
+                $"{procedimientoDemo.Nombre} no " +
+                $"implementa IProductoConStock: " +
+                $"no hay stock que descontar");
+
+            Console.WriteLine(
+                "\n--- Descuento por convenio ---");
+
+            var clienteDemo =
+                servicioCliente
+                .ObtenerClientes()
+                .First();
+
+            clienteDemo.Convenio =
+                new ConvenioUniversidad("UPB");
+
+            decimal descuento =
+                servicioDescuento
+                .CalcularDescuento(
+                    procedimientoDemo.Precio,
+                    clienteDemo);
+
+            Console.WriteLine(
+                $"Cliente: {clienteDemo.Nombre} - " +
+                $"Convenio: " +
+                $"{clienteDemo.Convenio.NombreEntidad} " +
+                $"({clienteDemo.Convenio.TipoConvenio})");
+
+            Console.WriteLine(
+                $"Precio: {procedimientoDemo.Precio} - " +
+                $"Descuento: {descuento} - " +
+                $"Total: " +
+                $"{procedimientoDemo.Precio - descuento}");
 
             break;
 

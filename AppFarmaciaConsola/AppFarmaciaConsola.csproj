@@ -12,6 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="convenios.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="clientes.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
