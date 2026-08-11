@@ -1,5 +1,6 @@
 ﻿using BibFarmacia.Clases;
 using BibFarmacia.Eventos;
+using BibFarmacia.Factories;
 using BibFarmacia.Interfaces;
 using BibFarmacia.Repositorios;
 using BibFarmacia.Servicios;
@@ -7,8 +8,20 @@ using BibFarmacia.Verificadores;
 
 Console.Title = "Sistema Farmacia";
 
+List<IProductoFactory> fabricas =
+    new List<IProductoFactory>
+    {
+        new MedicamentoCapsulaFactory(),
+        new MedicamentoLiquidoFactory(),
+        new CosmeticoFactory(),
+        new ComestibleFactory(),
+        new InyectologiaFactory(),
+        new CuracionBasicaFactory(),
+        new CambioVendajeFactory()
+    };
+
 IRepositoryProducto repositoryProducto =
-    new RepositoryProducto();
+    new RepositoryProducto(fabricas);
 
 IClienteRepository clienteRepository =
     new ClienteRepository();

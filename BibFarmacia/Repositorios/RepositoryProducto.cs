@@ -5,18 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BibFarmacia.Clases;
-using BibFarmacia.Enum;
 using BibFarmacia.Interfaces;
 
 namespace BibFarmacia.Repositorios
 {
     public class RepositoryProducto : IRepositoryProducto
     {
-        private readonly List<Producto> productos;
+        // Numero de columnas del productos.txt heredado, que no trae
+        // discriminador de tipo.
+        private const int ColumnasSinTipo = 6;
 
-        public RepositoryProducto()
+        private const string TipoPorDefecto = "medicamento_capsula";
+
+        private readonly List<Producto> productos;
+        private readonly List<IProductoFactory> fabricas;
+
+        public RepositoryProducto(
+            List<IProductoFactory> fabricas)
         {
             productos = new List<Producto>();
+
+            this.fabricas = fabricas;
         }
 
         public List<Producto> ObtenerProductos()
@@ -57,23 +66,17 @@ namespace BibFarmacia.Repositorios
                     string[] datos =
                         linea.Split(';');
 
-                    Laboratorio laboratorio =
-                        new Laboratorio(
-                            datos[5],
-                            "Medellin",
-                            "4444444");
+                    string tipo =
+                        datos.Length == ColumnasSinTipo
+                            ? TipoPorDefecto
+                            : datos[datos.Length - 1];
 
-                    MedicamentoCapsula medicamento =
-                        new MedicamentoCapsula(
-                            datos[0],
-                            decimal.Parse(datos[1]),
-                            int.Parse(datos[2]),
-                            int.Parse(datos[3]),
-                            DateTime.Parse(datos[4]),
-                            laboratorio,
-                            TipoRelleno.Gel);
+                    IProductoFactory fabrica =
+                        fabricas.First(f =>
+                            f.Tipo == tipo);
 
-                    productos.Add(medicamento);
+                    productos.Add(
+                        fabrica.Crear(datos));
                 }
 
                 return "Productos cargados";
