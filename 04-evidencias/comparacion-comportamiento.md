@@ -5,7 +5,7 @@ Los mismos 11 archivos de entrada se ejecutaron contra el sistema original
 (rama `fase4-implementacion`), con la misma redirección de entrada y salida.
 Los `diff` completos están en `04-evidencias/caracterizacion/diff/`.
 
-## Tabla de resultados
+## Tabla 1 — Sistema rediseñado completo (con SC-1)
 
 | Caso | Escenario | Resultado | Líneas que difieren |
 |------|-----------|-----------|---------------------|
@@ -23,6 +23,38 @@ Los `diff` completos están en `04-evidencias/caracterizacion/diff/`.
 
 8 de 11 casos son byte a byte idénticos. Los 3 restantes difieren
 **únicamente** por la excepción autorizada.
+
+## Tabla 2 — Sistema rediseñado con el `productos.txt` original
+
+Esta corrida aísla el refactor de la solicitud de cambio: es el **código
+rediseñado** ejecutando el `productos.txt` **original**, sin las seis filas que
+agrega SC-1 (verificado con `diff` contra el archivo de la rama
+`caracterizacion-original`: idéntico). Las salidas están en
+`04-evidencias/caracterizacion/rediseniado-sin-sc1/`.
+
+| Caso | Escenario | Resultado | Líneas que difieren |
+|------|-----------|-----------|---------------------|
+| 1 | Arranque, login correcto y alertas | Idéntico | 0 |
+| 2 | Login incorrecto | Idéntico | 0 |
+| 3 | Listar productos | Idéntico | 0 |
+| 4 | Buscar producto existente | Idéntico | 0 |
+| 5 | Buscar producto inexistente | Idéntico | 0 |
+| 6 | Buscar subcadena con varias coincidencias | Idéntico | 0 |
+| 7 | Venta con stock suficiente | Idéntico | 0 |
+| 8 | Venta con stock insuficiente (stock negativo) | Idéntico | 0 |
+| 9 | Acumular puntos | Idéntico | 0 |
+| 10 | Ver alertas desde el menú | Idéntico | 0 |
+| 11 | Salir | Idéntico | 0 |
+
+**11 de 11 idénticos byte a byte.**
+
+## Conclusión
+
+La refactorización preserva el comportamiento al 100 %. Las únicas diferencias
+de la tabla 1 provienen de la solicitud de cambio SC-1 — seis filas de datos
+nuevas en `productos.txt` — y no del rediseño de la arquitectura. Con el mismo
+archivo de datos, el sistema viejo y el nuevo producen exactamente la misma
+salida en los 11 casos.
 
 ## La única diferencia, explicada
 
