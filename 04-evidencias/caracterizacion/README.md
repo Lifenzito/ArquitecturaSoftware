@@ -31,6 +31,12 @@ git checkout caracterizacion-original
 git checkout fase4-implementacion
 ./04-evidencias/caracterizacion/ejecutar-casos.sh rediseniado   # sobre el TO-BE
 
+# TO-BE con el productos.txt original (sin las 6 filas de SC-1): aisla el
+# refactor de la solicitud de cambio.
+git checkout caracterizacion-original -- AppFarmaciaConsola/productos.txt
+./04-evidencias/caracterizacion/ejecutar-casos.sh rediseniado-sin-sc1
+git checkout HEAD -- AppFarmaciaConsola/productos.txt
+
 # un caso suelto, manualmente
 dotnet build SolucionFarmacia.sln -c Release
 cd AppFarmaciaConsola/bin/Release/net8.0
